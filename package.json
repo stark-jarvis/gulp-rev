@@ -1,12 +1,12 @@
 {
-  "name": "gulp-rev",
-  "version": "7.1.2",
-  "description": "Static asset revisioning by appending content hash to filenames: unicorn.css => unicorn-d41d8cd98f.css",
+  "name": "gulp-rev-change",
+  "version": "1.0.2",
+  "description": "Fork sindresorhus/gulp-rev. Static asset revisioning by appending content hash to filenames: unicorn.css => unicorn-d41d8cd98f.css",
   "license": "MIT",
-  "repository": "sindresorhus/gulp-rev",
+  "repository": "weiko/gulp-rev-change",
   "author": {
-    "name": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
+    "name": "weiko",
+    "email": "jhti@163.com",
     "url": "sindresorhus.com"
   },
   "engines": {

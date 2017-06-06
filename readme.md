@@ -1,5 +1,6 @@
-# gulp-rev [![Build Status](https://travis-ci.org/sindresorhus/gulp-rev.svg?branch=master)](https://travis-ci.org/sindresorhus/gulp-rev) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/sindresorhus/gulp-rev)
+# gulp-rev-change [![Build Status](https://travis-ci.org/sindresorhus/gulp-rev.svg?branch=master)](https://travis-ci.org/sindresorhus/gulp-rev) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo) [![Gitter](https://badges.gitter.im/join_chat.svg)](https://gitter.im/sindresorhus/gulp-rev)
 
+> Fork sindresorhus/gulp-rev(https://github.com/sindresorhus/gulp-rev)
 > Static asset revisioning by appending content hash to filenames
 > `unicorn.css` → `unicorn-d41d8cd98f.css`
 
@@ -17,7 +18,7 @@ Make sure to set the files to [never expire](http://developer.yahoo.com/performa
 ## Install
 
 ```
-$ npm install --save-dev gulp-rev
+$ npm install --save-dev gulp-rev-change
 ```
 
 
@@ -25,7 +26,7 @@ $ npm install --save-dev gulp-rev
 
 ```js
 const gulp = require('gulp');
-const rev = require('gulp-rev');
+const rev = require('gulp-rev-change');
 
 gulp.task('default', () =>
 	gulp.src('src/*.css')
@@ -79,6 +80,13 @@ Default: `JSON`
 An object with `parse` and `stringify` methods. This can be used to provide a
 custom transformer instead of the default `JSON` for the manifest file.
 
+##### mapvalue 
+
+Type: `string`<br>
+Default: `''`
+
+custom manifest key value. when using 'hash', the output manifest like '{ "base.css": "ed9c85ad" }'.
+
 
 ### Original path
 
@@ -94,7 +102,7 @@ The hash of each rev'd file is stored at `file.revHash`. You can use this for cu
 
 ```js
 const gulp = require('gulp');
-const rev = require('gulp-rev');
+const rev = require('gulp-rev-change');
 
 gulp.task('default', () =>
 	// by default, gulp would pick `assets/css` as the base,
@@ -103,17 +111,19 @@ gulp.task('default', () =>
 		.pipe(gulp.dest('build/assets'))  // copy original assets to build dir
 		.pipe(rev())
 		.pipe(gulp.dest('build/assets'))  // write rev'd assets to build dir
-		.pipe(rev.manifest())
+		.pipe(rev.manifest('rev-manifest.js', {
+				mapvalue: 'hash'
+			}))
 		.pipe(gulp.dest('build/assets'))  // write manifest to build dir
 );
 ```
 
-An asset manifest, mapping the original paths to the revisioned paths, will be written to `build/assets/rev-manifest.json`:
+An asset manifest, mapping the original paths to the revisioned paths, will be written to `build/assets/rev-manifest.js`:
 
 ```json
 {
-	"css/unicorn.css": "css/unicorn-d41d8cd98f.css",
-	"js/unicorn.js": "js/unicorn-273c2c123f.js"
+	"css/unicorn.css": "d41d8cd98f",
+	"js/unicorn.js": "273c2c123f"
 }
 ```
 
@@ -121,7 +131,7 @@ By default, `rev-manifest.json` will be replaced as a whole. To merge with an ex
 
 ```js
 const gulp = require('gulp');
-const rev = require('gulp-rev');
+const rev = require('gulp-rev-change');
 
 gulp.task('default', () =>
 	// by default, gulp would pick `assets/css` as the base,
@@ -147,7 +157,7 @@ Because of the way `gulp-concat` handles file paths, you may need to set `cwd` a
 
 ```js
 const gulp = require('gulp');
-const rev = require('gulp-rev');
+const rev = require('gulp-rev-change');
 const sourcemaps = require('gulp-sourcemaps');
 const concat = require('gulp-concat');
 
@@ -173,14 +183,14 @@ Since the order of streams are not guaranteed, some plugins such as `gulp-concat
 
 ## Streaming
 
-This plugin does not support streaming. If you have files from a streaming source, such as Browserify, you should use [`gulp-buffer`](https://github.com/jeromew/gulp-buffer) before `gulp-rev` in your pipeline:
+This plugin does not support streaming. If you have files from a streaming source, such as Browserify, you should use [`gulp-buffer`](https://github.com/jeromew/gulp-buffer) before `gulp-rev-change` in your pipeline:
 
 ```js
 const gulp = require('gulp');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('gulp-buffer');
-const rev = require('gulp-rev');
+const rev = require('gulp-rev-change');
 
 gulp.task('default', () =>
 	browserify('src/index.js')

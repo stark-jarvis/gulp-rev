@@ -58,7 +58,7 @@ const plugin = () => {
 		}
 
 		if (file.isStream()) {
-			cb(new gutil.PluginError('gulp-rev', 'Streaming not supported'));
+			cb(new gutil.PluginError('gulp-rev-change', 'Streaming not supported'));
 			return;
 		}
 
@@ -113,7 +113,8 @@ plugin.manifest = (pth, opts) => {
 	opts = Object.assign({
 		path: 'rev-manifest.json',
 		merge: false,
-		transformer: JSON
+		transformer: JSON,
+		mapvalue: '',	
 	}, opts, pth);
 
 	let manifest = {};
@@ -128,7 +129,12 @@ plugin.manifest = (pth, opts) => {
 		const revisionedFile = relPath(file.base, file.path);
 		const originalFile = path.join(path.dirname(revisionedFile), path.basename(file.revOrigPath)).replace(/\\/g, '/');
 
-		manifest[originalFile] = revisionedFile;
+		// modify manifest key value
+		if (opts.mapvalue === 'hash') {
+			manifest[originalFile] = file.revHash;
+		} else {
+			manifest[originalFile] = revisionedFile;
+		}
 
 		cb();
 	}, function (cb) {
@@ -139,6 +145,7 @@ plugin.manifest = (pth, opts) => {
 		}
 
 		getManifestFile(opts).then(manifestFile => {
+			
 			if (opts.merge && !manifestFile.isNull()) {
 				let oldManifest = {};
 
