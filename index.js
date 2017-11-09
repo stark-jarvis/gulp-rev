@@ -27,6 +27,10 @@ function transformFilename(file) {
 	file.revOrigPath = file.path;
 	file.revOrigBase = file.base;
 	file.revHash = revHash(file.contents);
+	
+	// CRLF to LF
+	let contents = file.contents.toString().replace(/\r\n?/g, '\n');
+	file.revHash = revHash( Buffer.from(contents) );
 
 	file.path = modifyFilename(file.path, (filename, extension) => {
 		const extIndex = filename.indexOf('.');
